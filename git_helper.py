@@ -72,7 +72,7 @@ git checkout nome-da-branch-existente
 git pull origin main
 """,
 
-    # --- NOVO GUIA (TROCAR REMOTO) ---
+    # --- GUIA TROCAR REMOTO ---
     "TROCAR_REMOTO": """
 ### 4. Trocar Repositório Remoto (Origem)
 
@@ -118,6 +118,7 @@ git checkout -- nome-do-arquivo.txt
 ### 6. Navegação (Terminal macOS)
 
 Comandos básicos para se mover no terminal (zsh/bash).
+(Idêntico ao Linux)
 
 # Mostra o caminho da pasta atual
 pwd
@@ -164,9 +165,36 @@ mv arquivo-antigo.txt novo-nome.txt
 mkdir nome-da-pasta
 """,
     
-    # --- NOVO GUIA (TERMINAL WINDOWS) ---
+    # --- NOVO GUIA (TERMINAL LINUX) ---
+    "TERMINAL_LINUX_UTIL": """
+### 8. Utilitários (Terminal Linux)
+
+Comandos úteis para distribuições Linux.
+(Nota: Navegação 'ls', 'cd', 'pwd' é idêntica à do macOS)
+
+# Gerenciador de Pacotes (Debian/Ubuntu)
+sudo apt-get update
+sudo apt-get install [pacote]
+sudo apt-get remove [pacote]
+
+# Gerenciador de Pacotes (RedHat/Fedora)
+sudo dnf install [pacote]  # (Moderno)
+sudo yum install [pacote]  # (Antigo)
+
+# Mudar permissões de arquivos (ler=4, w=2, x=1)
+# Ex: 755 = (dono:rwx, grupo:r-x, outros:r-x)
+chmod 755 seu_script.sh
+
+# Mudar o dono de um arquivo
+sudo chown usuario:grupo nome_do_arquivo.txt
+
+# Procurar texto dentro de arquivos (MUITO útil)
+grep "texto para buscar" arquivo.txt
+""",
+
+    # --- GUIA (TERMINAL WINDOWS) ---
     "TERMINAL_WINDOWS": """
-### 8. Comandos (Terminal Windows)
+### 9. Comandos (Terminal Windows)
 
 Comandos básicos para o Prompt de Comando (cmd.exe).
 
@@ -201,11 +229,13 @@ del nome-do-arquivo.txt
 class GitHelperApp:
     def __init__(self, root):
         self.root = root
-        root.title("Guia Rápido (Git, macOS & Windows)")
+        # --- Título Atualizado ---
+        root.title("Guia Rápido (Git, macOS, Linux & Windows)")
 
         # --- Posição e "Sempre no Topo" ---
         app_width = 700
-        app_height = 500 # Aumentei um pouco a altura para os novos botões
+        # --- Altura Aumentada ---
+        app_height = 550 
         screen_width = root.winfo_screenwidth()
         screen_height = root.winfo_screenheight()
         x = screen_width - app_width - 40
@@ -243,11 +273,12 @@ class GitHelperApp:
                               font=("Arial", 12, "bold"))
         label_git.pack(pady=(0, 5))
 
+        # --- Renumerados ---
         self.criar_botao("1. Novo Repositório", "NOVO_REPO")
         self.criar_botao("2. Rotina Diária", "ROTINA_DIARIA")
         self.criar_botao("3. Atualizar / Trocar", "ATUALIZAR")
-        self.criar_botao("4. Trocar Repositório (Remoto)", "TROCAR_REMOTO") # NOVO
-        self.criar_botao("5. Outros Comandos Git", "OUTROS_GIT") # Renumerado
+        self.criar_botao("4. Trocar Repositório (Remoto)", "TROCAR_REMOTO")
+        self.criar_botao("5. Outros Comandos Git", "OUTROS_GIT") 
 
         separator_mac = ttk.Separator(self.frame_botoes, orient='horizontal')
         separator_mac.pack(fill='x', pady=15, padx=5)
@@ -257,10 +288,22 @@ class GitHelperApp:
                               font=("Arial", 12, "bold"))
         label_mac.pack(pady=(0, 5))
 
-        self.criar_botao("6. Navegação (macOS)", "TERMINAL_MAC_NAV") # Renumerado
-        self.criar_botao("7. Utilitários (macOS)", "TERMINAL_MAC_UTIL") # Renumerado
+        # --- Renumerados ---
+        self.criar_botao("6. Navegação (macOS)", "TERMINAL_MAC_NAV") 
+        self.criar_botao("7. Utilitários (macOS)", "TERMINAL_MAC_UTIL")
 
-        # --- NOVO: Seção Windows ---
+        # --- NOVO: Seção Linux ---
+        separator_lin = ttk.Separator(self.frame_botoes, orient='horizontal')
+        separator_lin.pack(fill='x', pady=15, padx=5)
+
+        label_lin = ttk.Label(self.frame_botoes, 
+                              text="Terminal Linux", 
+                              font=("Arial", 12, "bold"))
+        label_lin.pack(pady=(0, 5))
+
+        self.criar_botao("8. Utilitários (Linux)", "TERMINAL_LINUX_UTIL") # NOVO
+
+        # --- Seção Windows ---
         separator_win = ttk.Separator(self.frame_botoes, orient='horizontal')
         separator_win.pack(fill='x', pady=15, padx=5)
 
@@ -269,7 +312,7 @@ class GitHelperApp:
                               font=("Arial", 12, "bold"))
         label_win.pack(pady=(0, 5))
 
-        self.criar_botao("8. Comandos (Windows)", "TERMINAL_WINDOWS") # NOVO
+        self.criar_botao("9. Comandos (Windows)", "TERMINAL_WINDOWS") # Renumerado
         
         # --- Fim das adições ---
 
@@ -288,8 +331,6 @@ class GitHelperApp:
     def mostrar_ajuda(self, topico_id):
         """Atualiza a caixa de texto com o conteúdo do tópico"""
         
-        # --- Prints de Debug removidos ---
-        
         texto = GUIAS_AJUDA.get(topico_id, "Tópico não encontrado.")
         
         self.texto_ajuda.config(state=tk.NORMAL)
@@ -301,7 +342,7 @@ class GitHelperApp:
 if __name__ == "__main__":
     main_window = tk.Tk()
     style = ttk.Style(main_window)
-    # (Mantendo o tema nativo do Mac)
+    # (Mantendo o tema nativo do sistema)
     
     app = GitHelperApp(main_window)
     main_window.mainloop()
